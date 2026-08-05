@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tech Peak PRD"
+  short_description: "Write a lean, buildable feature PRD"
+  default_prompt: "Use $tp_prd to turn this feature discussion into a concise, buildable PRD."

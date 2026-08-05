@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tech Peak Plan"
+  short_description: "Create an executable feature roadmap"
+  default_prompt: "Use $tp_plan to turn the approved PRD and architecture into an ordered implementation roadmap."
