@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tech Peak Architecture"
+  short_description: "Design how one feature fits the codebase"
+  default_prompt: "Use $tp_architecture to design how this approved feature should fit the existing codebase."

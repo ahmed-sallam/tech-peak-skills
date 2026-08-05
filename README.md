@@ -1,12 +1,8 @@
 # Tech Peak Skills
 
-Lightweight, composable AI coding skills for Claude Code, Kilo Code, and compatible coding agents.
+Lean, composable agent skills for turning one feature idea into implementation-ready guidance. Each skill owns one stage, produces one artifact, and hands that artifact to the next stage.
 
-Each skill has a single responsibility and produces an artifact that becomes the input for the next stage of development.
-
----
-
-# Workflow
+## Workflow
 
 ```text
 Idea
@@ -24,120 +20,77 @@ Review
 Pull Request
 ```
 
----
+This repository currently provides the three planning skills in that workflow:
 
-# Skills
+| Skill | Question it answers | Default artifact |
+| --- | --- | --- |
+| `tp_prd` | What should we build? | `docs/prd/<feature-slug>.md` |
+| `tp_architecture` | How should it fit the existing system? | `docs/architecture/<feature-slug>.md` |
+| `tp_plan` | In what order should we implement it? | `docs/plans/<feature-slug>.md` |
 
-## `prd`
+Implementation, review, and pull-request creation remain execution stages rather than packaged skills in this repository.
 
-Turns the current conversation and codebase into a concise, buildable Product Requirements Document for a single feature.
+## Install
 
-**Output**
-
-- Problem
-- Goals
-- Requirements
-- User stories
-- Acceptance criteria
-- Scope
-- Assumptions
-
-Install
-
-```bash
-npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill prd
-```
-
----
-
-## `architecture`
-
-Transforms an approved PRD into a technical design that fits the existing codebase.
-
-**Output**
-
-- Architecture decisions
-- Domain model
-- Database changes
-- API design
-- Frontend structure
-- Integration points
-- Risks
-- Trade-offs
-
-Install
-
-```bash
-npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill architecture
-```
-
----
-
-## `plan`
-
-Creates an ordered implementation roadmap from the architecture and PRD.
-
-**Output**
-
-- Implementation steps
-- File changes
-- Migration order
-- Testing strategy
-- Validation checklist
-- Execution sequence
-
-Install
-
-```bash
-npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill plan
-```
-
----
-
-# Install All Skills
+Install all skills:
 
 ```bash
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills
 ```
 
----
+Install one skill:
 
-# Manual Installation
-
-Copy the desired skill into either:
-
-Project-specific
-
-```text
-.claude/skills/<skill-name>/SKILL.md
+```bash
+npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_prd
+npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_architecture
+npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_plan
 ```
 
-or globally
+To install manually, copy the desired folder from `skills/` into your agent's project or global skills directory. Keep the folder name unchanged so it matches the skill's `name` metadata.
+
+For Claude Code, use:
 
 ```text
-~/.claude/skills/<skill-name>/SKILL.md
+.claude/skills/<skill-name>/     # project
+~/.claude/skills/<skill-name>/   # global
 ```
 
-Examples
+## Skills
 
-```text
-.claude/skills/prd/SKILL.md
-.claude/skills/architecture/SKILL.md
-.claude/skills/plan/SKILL.md
-```
+### `tp_prd`
 
----
+Creates a short, buildable PRD for one feature from the current conversation and relevant codebase context. It defines the goal, scope, testable acceptance criteria, and concrete technical touchpoints without turning the document into an enterprise requirements exercise.
 
-# Philosophy
+Use it when requirements need to be captured before architecture or implementation work begins.
 
-Each skill should have one responsibility.
+### `tp_architecture`
 
-| Skill | Responsibility |
-|--------|----------------|
-| **PRD** | Decide **what** should be built |
-| **Architecture** | Decide **how it fits** into the existing system |
-| **Plan** | Decide **how to implement** the feature |
-| **Implementation** | Write the code |
-| **Review** | Validate correctness and quality |
+Converts an approved PRD into a concise technical design for the existing codebase. It decides feature placement, reuse boundaries, data and API shape, integrations, security considerations, and important trade-offs without producing implementation tasks or code.
 
-Keeping these concerns separate produces more consistent outputs and allows different AI agents to specialize in each stage.
+Use it before writing an implementation plan for architectural, cross-cutting, or high-risk features.
+
+### `tp_plan`
+
+Converts an approved PRD and architecture into an ordered implementation roadmap. It identifies concrete file changes, dependencies, validation steps, tests, risks, and checkpoints without revisiting product requirements or architectural decisions.
+
+Use it when the design is settled and a coding agent needs an executable sequence of small, verifiable steps.
+
+## Naming and migration
+
+All Tech Peak skills use the `tp_` namespace to avoid collisions with similarly named built-in or community skills.
+
+| Previous name | Current name |
+| --- | --- |
+| `prd` | `tp_prd` |
+| `architecture` | `tp_architecture` |
+| `tp_plan` | `tp_plan` |
+
+If you installed an earlier version manually, remove the old `prd` and `architecture` skill folders after installing their renamed replacements.
+
+## Design principles
+
+- Give every skill one responsibility and one primary artifact.
+- Use repository context and existing conventions instead of inventing parallel structures.
+- Keep requirements, architecture, planning, implementation, and review separate.
+- Prefer concise, testable, implementation-ready outputs.
+- State assumptions when missing information is not a genuine blocker.

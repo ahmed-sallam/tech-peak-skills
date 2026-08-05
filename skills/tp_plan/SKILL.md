@@ -1,236 +1,72 @@
 ---
 name: tp_plan
-description: Convert an approved PRD and architecture into a concrete implementation plan. Produce an ordered, buildable roadmap for ONE feature before coding. Focus on execution, not requirements or design.
+description: Convert an approved PRD and architecture into a concrete, ordered implementation plan for ONE feature. Use after requirements and technical design are settled and before coding, especially when a coding agent needs file-level tasks, dependencies, verification steps, risks, and completion checks without reopening product or architecture decisions.
 ---
 
 # Implementation Plan
 
-Produce a concise implementation plan for ONE feature.
-
-Assume the PRD has already been written.
-
-Assume the architecture has already been decided.
-
-This skill answers:
-
-> "How should we implement this feature?"
-
-It is NOT a PRD.
-
-It is NOT an architecture document.
-
-It is NOT a code review.
-
-It is NOT an implementation.
-
----
-
-## Goals
-
-- Produce an implementation roadmap.
-- Minimize unnecessary work.
-- Reuse existing code whenever possible.
-- Break work into small, verifiable steps.
-- Reduce implementation risk.
-- Keep tasks independently testable.
-
----
-
-## Planning Process
-
-### 1. Review Inputs
-
-Read:
-
-- PRD
-- Architecture document
-- Existing codebase
-
-Identify:
-
-- dependencies
-- assumptions
-- reusable code
-- blockers
-
----
-
-### 2. Define Implementation Order
-
-Arrange work in the safest order.
-
-Typical order:
-
-1. Domain
-2. Database
-3. Backend
-4. API
-5. Frontend
-6. Integration
-7. Tests
-8. Documentation
-
-Reorder if another sequence reduces risk.
-
----
-
-### 3. Identify File Changes
-
-List files likely to:
-
-- create
-- modify
-- remove (rare)
-
-Group them by module.
-
-Do not invent filenames if unknown.
-
----
-
-### 4. Database Work
-
-Describe:
-
-- migrations
-- indexes
-- constraints
-- seed data
-- rollback considerations
-
----
-
-### 5. Backend Tasks
-
-Describe:
-
-- services
-- repositories
-- controllers
-- DTOs
-- validation
-- authorization
-- events
-
----
-
-### 6. Frontend Tasks
-
-Describe:
-
-- pages
-- routes
-- components
-- forms
-- state management
-- caching
-- permissions
-
----
-
-### 7. Testing Strategy
-
-Include:
-
-- unit tests
-- integration tests
-- API tests
-- UI tests (if applicable)
-- manual validation
-
----
-
-### 8. Risks
-
-Identify implementation risks.
-
-For each risk:
-
-- explain
-- mitigation
-
----
-
-### 9. Validation Checklist
-
-Before considering the feature complete:
-
-- Builds successfully
-- Tests pass
-- Acceptance criteria satisfied
-- No obvious regressions
-- Documentation updated
-
----
-
-# Output Format
-
-## Summary
-
-Short overview.
-
-## Assumptions
-
-...
-
-## Dependencies
-
-...
-
-## Implementation Steps
-
-### Step 1
-
-...
-
-### Step 2
-
-...
-
-### Step N
-
-...
-
-## File Changes
-
-...
-
-## Database
-
-...
-
-## Backend
-
-...
-
-## Frontend
-
-...
-
-## Testing
-
-...
-
-## Risks
-
-...
-
-## Completion Checklist
-
-- [ ]
-
-- [ ]
-
-- [ ]
-
----
+Produce an executable roadmap for one feature. Assume the approved PRD defines what to build and the approved architecture defines how it fits the system. Plan the work without rewriting either artifact or writing code.
+
+## Workflow
+
+1. Read the PRD, architecture document, and relevant codebase areas.
+2. Identify dependencies, assumptions, reusable code, and genuine blockers.
+3. Order work by dependency and risk. Prefer vertical, independently verifiable increments when the architecture allows them.
+4. Break implementation into small steps, each with one clear outcome and its own verification.
+5. Name files to create, modify, or remove only when supported by repository evidence. Group changes by module.
+6. Include relevant data, backend, API, frontend, integration, testing, documentation, compatibility, and rollback work.
+7. Write the result to `docs/plans/<feature-slug>.md`, creating the directory when needed.
 
 ## Rules
 
-- Do not write code.
-- Do not redesign the architecture.
-- Do not change business requirements.
-- Keep steps small and sequential.
-- Prefer modifying existing code over introducing new abstractions.
-- State assumptions explicitly.
-- Keep the plan implementation-focused.
+- Do not change business requirements or redesign the approved architecture.
+- Do not write implementation code or estimate time.
+- Prefer existing utilities, patterns, and dependencies.
+- Make dependencies and ordering explicit.
+- Include validation with every step, not only in a final testing section.
+- State assumptions and blockers clearly; do not invent filenames or interfaces.
+- Include rollback or mitigation steps for schema, public API, authentication, data deletion, CI/CD, and production-impacting changes.
+
+## Output template
+
+```markdown
+# Plan: <feature name>
+
+## Summary
+<implementation approach and sequencing rationale>
+
+## Inputs
+- PRD: <path>
+- Architecture: <path>
+
+## Assumptions and dependencies
+- <assumption or dependency>
+
+## Implementation steps
+
+### 1. <outcome>
+- **Changes:** <specific files, modules, or interfaces>
+- **Details:** <what to implement without writing the code>
+- **Verify:** <command, test, or observable result>
+
+### 2. <next outcome>
+- **Depends on:** <earlier step, if any>
+- **Changes:** <specific files, modules, or interfaces>
+- **Details:** <what to implement>
+- **Verify:** <command, test, or observable result>
+
+## File summary
+- **Create:** <paths or "None">
+- **Modify:** <paths or "None">
+- **Remove:** <paths or "None">
+
+## Risks and mitigations
+- **<risk>:** <mitigation>
+
+## Completion checklist
+- [ ] Project builds, type-checks, and lints without new errors or warnings.
+- [ ] Relevant automated tests pass.
+- [ ] Every PRD acceptance criterion is satisfied.
+- [ ] Documentation and compatibility notes are updated where required.
+- [ ] The final diff is reviewed for regressions, security issues, and leaked secrets.
+```
