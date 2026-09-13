@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tech Peak Delegate"
+  short_description: "Plan, delegate, verify, and deliver with chosen models"
+  default_prompt: "Use $tp-delegate to take this idea through planning, execution with my chosen tool and model, verification, and final review."

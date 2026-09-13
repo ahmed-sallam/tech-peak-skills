@@ -1,0 +1,98 @@
+{
+  "opencode": {
+    "argv": [
+      "opencode",
+      "run",
+      "Execute only the assigned task in the attached packet and return its required report.",
+      "--model",
+      "{model}",
+      "--format",
+      "json",
+      "--file",
+      "{packet}"
+    ],
+    "resume_argv": [
+      "opencode",
+      "run",
+      "Apply only the attached correction packet and return its required report.",
+      "--model",
+      "{model}",
+      "--format",
+      "json",
+      "--session",
+      "{session}",
+      "--file",
+      "{packet}"
+    ],
+    "stdin": "none"
+  },
+  "claude": {
+    "argv": [
+      "claude",
+      "--print",
+      "--model",
+      "{model}",
+      "--output-format",
+      "json"
+    ],
+    "resume_argv": [
+      "claude",
+      "--print",
+      "--model",
+      "{model}",
+      "--output-format",
+      "json",
+      "--resume",
+      "{session}"
+    ],
+    "stdin": "packet"
+  },
+  "codex": {
+    "argv": [
+      "codex",
+      "exec",
+      "--model",
+      "{model}",
+      "--sandbox",
+      "workspace-write",
+      "--json",
+      "-"
+    ],
+    "resume_argv": [
+      "codex",
+      "exec",
+      "resume",
+      "--model",
+      "{model}",
+      "--json",
+      "{session}",
+      "-"
+    ],
+    "stdin": "packet"
+  },
+  "pi": {
+    "argv": [
+      "pi",
+      "--print",
+      "--mode",
+      "json",
+      "--model",
+      "{model}",
+      "@{packet}",
+      "Execute only the assigned task in the attached packet and return its required report."
+    ],
+    "resume_argv": [
+      "pi",
+      "--print",
+      "--mode",
+      "json",
+      "--model",
+      "{model}",
+      "--session",
+      "{session}",
+      "@{packet}",
+      "Apply only the attached correction packet and return its required report."
+    ],
+    "stdin": "none"
+  }
+}

@@ -1,6 +1,6 @@
 # Tech Peak Skills
 
-Lean, composable agent skills for turning one feature idea into implementation-ready guidance. Each skill owns one stage, produces one artifact, and hands that artifact to the next stage.
+Lean, composable agent skills for taking one feature from idea to reviewed delivery. Planning skills own individual stages; the delegation skill coordinates execution with your chosen coding tool and model.
 
 ## Workflow
 
@@ -20,15 +20,16 @@ Review
 Pull Request
 ```
 
-This repository currently provides the three planning skills in that workflow:
+This repository provides three planning skills and an optional end-to-end coordinator:
 
 | Skill | Question it answers | Default artifact |
 | --- | --- | --- |
 | `tp_prd` | What should we build? | `docs/prd/<feature-slug>.md` |
 | `tp_architecture` | How should it fit the existing system? | `docs/architecture/<feature-slug>.md` |
 | `tp_plan` | In what order should we implement it? | `docs/plans/<feature-slug>.md` |
+| `tp-delegate` | Who implements, how is work verified, and when is it accepted? | Planning artifacts + private task packets and execution evidence |
 
-Implementation, review, and pull-request creation remain execution stages rather than packaged skills in this repository.
+`tp-delegate` keeps the lead model responsible for decisions and review while a selected worker implements and fixes routine failures. Git writes, pull requests, and deployment still require the user's authorization.
 
 ## Install
 
@@ -44,6 +45,7 @@ Install one skill:
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_prd
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_architecture
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_plan
+npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp-delegate
 ```
 
 To install manually, copy the desired folder from `skills/` into your agent's project or global skills directory. Keep the folder name unchanged so it matches the skill's `name` metadata.
@@ -75,9 +77,48 @@ Converts an approved PRD and architecture into an ordered implementation roadmap
 
 Use it when the design is settled and a coding agent needs an executable sequence of small, verifiable steps.
 
+### `tp-delegate`
+
+Takes a feature through requirements, architecture, planning, delegated implementation, independent verification, correction, and delivery. Choose the worker tool and exact model in your request. OpenCode, Claude Code, Codex, and Pi profiles are included; other CLIs can be configured with a verified argument array.
+
+Example request (replace the model placeholder with an ID available in your tool):
+
+```text
+Use $tp-delegate. Keep the current Codex/Astra session as lead.
+Feature: add status/date filters to the request list using the existing API.
+Prepare PRD, architecture, and plan, then delegate implementation to OpenCode
+with model <verified-provider/model-id>.
+Allow two worker repair rounds, one review correction, and 20 minutes per run.
+Review and verify the final result. Do not commit or push.
+```
+
+مثال عربي:
+
+```text
+استخدم $tp-delegate من الفكرة للتسليم. خليك القائد في الجلسة الحالية.
+المنفذ OpenCode والنموذج هو المعرّف المتاح الذي أحدده لك.
+جهّز PRD وArchitecture وPlan، ثم سلّم التنفيذ وراجع واختبر الناتج.
+اسمح بمحاولتي إصلاح للمنفذ وجولة تصحيح مراجعة واحدة، بدون commit أو push.
+الفكرة: [وصف الميزة].
+```
+
+The lead's own model is selected in its host, not switched by the skill. Small tasks use one brief unless separate artifacts are requested. Existing Tech Peak planning skills are reused when available; concise equivalents work when only this skill is installed.
+
+The bundled Python 3 runner needs no third-party packages and supports Linux/macOS. It offers a dry run, private logs, exact-session correction, timeout handling, and process-group cleanup. It does not enforce file scope or dollar/token budgets, automatically wake a closed lead task, or prove a model's completion claim. The lead keeps the host turn active, checks actual changes, and verifies acceptance. See [execution setup](skills/tp-delegate/references/execution.md).
+
+CLI argument templates were checked against local help; real provider calls and account/model availability have not been tested. No particular model's price, quality, or availability is assumed.
+
+## Validation
+
+Run the offline runner tests (fake processes only, no model credits):
+
+```bash
+python3 -B -m unittest discover -s tests -v
+```
+
 ## Naming and migration
 
-All Tech Peak skills use the `tp_` namespace to avoid collisions with similarly named built-in or community skills.
+The existing planning skills retain their `tp_` names. The new `tp-delegate` uses a hyphenated name for compatibility with skill validators; no existing skill is renamed.
 
 | Previous name | Current name |
 | --- | --- |
@@ -89,7 +130,7 @@ If you installed an earlier version manually, remove the old `prd` and `architec
 
 ## Design principles
 
-- Give every skill one responsibility and one primary artifact.
+- Give each planning skill one primary artifact; keep orchestration in the coordinator.
 - Use repository context and existing conventions instead of inventing parallel structures.
 - Keep requirements, architecture, planning, implementation, and review separate.
 - Prefer concise, testable, implementation-ready outputs.
