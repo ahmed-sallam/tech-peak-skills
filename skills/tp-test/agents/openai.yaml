@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tech Peak Test"
+  short_description: "Plan and run focused tests with an evidence-based QA report"
+  default_prompt: "Use $tp-test to inspect this feature and diff, add missing tests, run relevant checks including Playwright where needed, and report findings without changing production code."

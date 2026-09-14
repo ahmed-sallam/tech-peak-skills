@@ -1,6 +1,6 @@
 # Tech Peak Skills
 
-Lean, composable agent skills for taking one feature from idea to reviewed delivery. Planning skills own individual stages; the delegation skill coordinates execution with your chosen coding tool and model.
+Lean, composable agent skills for taking one feature from idea to reviewed delivery. Planning skills own individual stages, the QA skill verifies implemented behavior, and the delegation skill coordinates execution with your chosen coding tool and model.
 
 ## Workflow
 
@@ -15,18 +15,21 @@ Plan
   ↓
 Implementation
   ↓
+QA / Tests
+  ↓
 Review
   ↓
 Pull Request
 ```
 
-This repository provides three planning skills and an optional end-to-end coordinator:
+This repository provides three planning skills, a QA skill, and an optional end-to-end coordinator:
 
 | Skill | Question it answers | Default artifact |
 | --- | --- | --- |
 | `tp_prd` | What should we build? | `docs/prd/<feature-slug>.md` |
 | `tp_architecture` | How should it fit the existing system? | `docs/architecture/<feature-slug>.md` |
 | `tp_plan` | In what order should we implement it? | `docs/plans/<feature-slug>.md` |
+| `tp-test` | Does the implemented behavior meet its requirements, and what evidence is missing? | `docs/qa/<feature-slug>.md` |
 | `tp-delegate` | Who implements, how is work verified, and when is it accepted? | Planning artifacts + private task packets and execution evidence |
 
 `tp-delegate` keeps the lead model responsible for decisions and review while a selected worker implements and fixes routine failures. Git writes, pull requests, and deployment still require the user's authorization.
@@ -45,6 +48,7 @@ Install one skill:
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_prd
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_architecture
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_plan
+npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp-test
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp-delegate
 ```
 
@@ -76,6 +80,31 @@ Use it before writing an implementation plan for architectural, cross-cutting, o
 Converts an approved PRD and architecture into an ordered implementation roadmap. It identifies concrete file changes, dependencies, validation steps, tests, risks, and checkpoints without revisiting product requirements or architectural decisions.
 
 Use it when the design is settled and a coding agent needs an executable sequence of small, verifiable steps.
+
+### `tp-test`
+
+Runs a focused QA pass after implementation: inspect requirements and the diff, plan coverage, add missing tests, execute relevant checks, classify failures, and produce a report with a PASS, FAIL, or BLOCKED verdict. It leaves production-code fixes to the implementer unless you explicitly expand its scope.
+
+It selects existing tools by risk: JUnit/Mockito for rules, Spring Boot Test/Testcontainers for persistence, existing API tests such as REST Assured or MockMvc, ArchUnit for established architecture rules, frontend unit/component tests, static checks, and Playwright for affected browser journeys. Other stacks reuse their established equivalents. Framework installation, CI changes, and active security scans are separate authorized work.
+
+Playwright coverage focuses on affected routes, forms, permissions, and multi-step flows. Internal calculations do not automatically trigger browser tests. Missing E2E prerequisites remain visible as blocked evidence; mocked UI responses do not prove backend correctness. See [the skill](skills/tp-test/SKILL.md) and its conditional references.
+
+```text
+Use $tp-test on the current feature diff and its acceptance criteria.
+Add missing tests, run the relevant checks and affected Playwright journeys,
+and write a QA report. Do not change production code or commit/push.
+```
+
+مثال عربي:
+
+```text
+استخدم $tp-test لاختبار ميزة تحصيل الرسوم بعد تنفيذها.
+اقرأ المتطلبات والتغييرات، أضف الاختبارات الناقصة، وشغّل المناسب منها.
+اختبر مسار المستخدم بـPlaywright وقواعد الحساب والحفظ في اختبارات مستقلة.
+أعطني تقريرًا بالأخطاء والأدلة وما تعذّر اختباره، دون تعديل كود التطبيق أو الرفع.
+```
+
+The skill works standalone or as an explicitly assigned QA step in a `tp-delegate` workflow. It does not launch another agent automatically. Raw browser traces, authentication state, and sensitive logs belong outside version control. A QA report is evidence for review, not permission to merge or deploy.
 
 ### `tp-delegate`
 
@@ -118,7 +147,7 @@ python3 -B -m unittest discover -s tests -v
 
 ## Naming and migration
 
-The existing planning skills retain their `tp_` names. The new `tp-delegate` uses a hyphenated name for compatibility with skill validators; no existing skill is renamed.
+The existing planning skills retain their `tp_` names. New skills `tp-delegate` and `tp-test` use hyphenated names for compatibility with skill validators; no existing skill is renamed. The testing skill discussed as `tp_test` is published as `tp-test`.
 
 | Previous name | Current name |
 | --- | --- |
