@@ -26,6 +26,11 @@ remain unresolved; retries and pre-existing failures must stay visible.
 3. **Execution:** working directory, exact command, exit status, pass/fail/skip counts
    where exposed, and sanitized evidence path. Mark unavailable counts as unknown.
    Separate baseline from final runs and identify retries/stale or missing reports.
+   When SonarQube applies, include whether it is optional/required, project and
+   branch/PR, revision and analysis identity, completion time, Quality Gate result
+   and failed conditions, and a safe result link. Distinguish unavailable analysis
+   from a failed gate. Disclose stale evidence, missing coverage imports, and
+   unverified working-tree changes; see [SonarQube guidance](sonarqube.md).
 4. **Findings:** severity, affected location/test, minimal synthetic reproduction,
    expected versus observed outcome, user/data impact, and evidence. Distinguish
    confirmed defects from hypotheses; assign severity by impact, not the framework.

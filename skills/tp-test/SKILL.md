@@ -62,6 +62,7 @@ into assertions. List dependency-ordered subtasks with verification for larger w
 | Components and local UI states | Existing component tests; add browser coverage for affected user behavior |
 | Routes, forms, browser auth, permissions, multi-step user flows | Playwright E2E for the affected journey, plus lower-layer checks for its rules |
 | Build, types, formatting/lint, static rules | Relevant existing build/typecheck/lint/static-analysis commands |
+| Configured code-quality policy | Optional SonarQube analysis and Quality Gate for the tested revision |
 
 Use the lowest layer that proves each property. Internal service/mapper/calculation
 changes normally need no browser run. Browser-visible behavior requires targeted
@@ -72,6 +73,10 @@ the missing evidence; a unit test or mocked browser response cannot prove full i
 Read [Playwright guidance](references/playwright.md) only for browser work.
 Read [business and backend cases](references/backend.md) for persistence, API,
 financial, permission, or architectural changes.
+Read [SonarQube guidance](references/sonarqube.md) when SonarQube is configured,
+explicitly requested, or required by project policy. Use it when available and
+authorized; optional absence is a disclosed gap, while missing required evidence
+blocks acceptance. It supplements the behavioral tests above.
 
 Default to affected tests and the relevant existing smoke suite. Run full E2E or
 repository-wide expensive checks when requested, required by project policy, or

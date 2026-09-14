@@ -89,6 +89,8 @@ It selects existing tools by risk: JUnit/Mockito for rules, Spring Boot Test/Tes
 
 Playwright coverage focuses on affected routes, forms, permissions, and multi-step flows. Internal calculations do not automatically trigger browser tests. Missing E2E prerequisites remain visible as blocked evidence; mocked UI responses do not prove backend correctness. See [the skill](skills/tp-test/SKILL.md) and its conditional references.
 
+Optional [SonarQube integration](skills/tp-test/references/sonarqube.md) reuses an authorized setup, verifies that analysis matches the tested revision, waits for server processing, and includes the Quality Gate and relevant findings in the QA report. If optional analysis is unavailable, the skill discloses the gap and continues; if project policy or the user requires it, missing evidence blocks acceptance. A completed matching gate failure is reported as FAIL. The skill does not install SonarQube, configure CI, or weaken quality rules automatically.
+
 ```text
 Use $tp-test on the current feature diff and its acceptance criteria.
 Add missing tests, run the relevant checks and affected Playwright journeys,
