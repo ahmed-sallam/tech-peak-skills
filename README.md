@@ -1,6 +1,6 @@
 # Tech Peak Skills
 
-Lean, composable agent skills for taking one feature from idea to reviewed delivery. Planning skills own individual stages, the QA skill verifies implemented behavior, and the delegation skill coordinates execution with your chosen coding tool and model.
+Lean, composable agent skills for taking one feature from idea to reviewed delivery. Planning skills own individual stages, TDD guides test-first implementation, the QA skill verifies implemented behavior, and the delegation skill coordinates execution with your chosen coding tool and model.
 
 ## Workflow
 
@@ -13,7 +13,7 @@ Architecture
   ↓
 Plan
   ↓
-Implementation
+Implementation (TDD when requested: Red → Green → Refactor)
   ↓
 QA / Tests
   ↓
@@ -22,13 +22,14 @@ Review
 Pull Request
 ```
 
-This repository provides three planning skills, a QA skill, and an optional end-to-end coordinator:
+This repository provides three planning skills, a TDD skill, a QA skill, and an optional end-to-end coordinator:
 
 | Skill | Question it answers | Default artifact |
 | --- | --- | --- |
 | `tp_prd` | What should we build? | `docs/prd/<feature-slug>.md` |
 | `tp_architecture` | How should it fit the existing system? | `docs/architecture/<feature-slug>.md` |
 | `tp_plan` | In what order should we implement it? | `docs/plans/<feature-slug>.md` |
+| `tdd` | What failing test proves the next behavior, and what implementation makes it pass? | Unit/integration tests + implementation + Red/Green evidence |
 | `tp-test` | Does the implemented behavior meet its requirements, and what evidence is missing? | `docs/qa/<feature-slug>.md` |
 | `tp-delegate` | Who implements, how is work verified, and when is it accepted? | Planning artifacts + private task packets and execution evidence |
 
@@ -48,6 +49,7 @@ Install one skill:
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_prd
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_architecture
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp_plan
+npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tdd
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp-test
 npx skills add https://github.com/ahmed-sallam/tech-peak-skills --skill tp-delegate
 ```
@@ -80,6 +82,30 @@ Use it before writing an implementation plan for architectural, cross-cutting, o
 Converts an approved PRD and architecture into an ordered implementation roadmap. It identifies concrete file changes, dependencies, validation steps, tests, risks, and checkpoints without revisiting product requirements or architectural decisions.
 
 Use it when the design is settled and a coding agent needs an executable sequence of small, verifiable steps.
+
+### `tdd`
+
+Guides implementation through small Red → Green → Refactor cycles. For each behavior, derive a unit or integration test from acceptance criteria, run it and confirm a behavioral failure, implement the smallest correct change, then refactor with tests green. Add both layers when they prove distinct risks; a mocked repository does not establish database integration.
+
+Use it after planning and during implementation, before final QA with `tp-test`. It also works standalone for a small task. A tests-only request stops at failing tests and a handoff; it does not authorize production edits. Missing tools or databases are blockers, not evidence of Red. The skill reuses the project's existing test infrastructure and does not install frameworks or alter CI automatically.
+
+```text
+Use $tdd to implement this feature from the agreed plan and acceptance criteria.
+Write and run the next unit or integration test before its production logic.
+Record the behavioral failure, make it pass, refactor, and run relevant regressions.
+Do not commit or push.
+```
+
+مثال عربي:
+
+```text
+استخدم $tdd لتنفيذ الميزة حسب الخطة ومعايير القبول.
+لكل سلوك، اكتب وشغّل اختبار Unit أو Integration قبل كود التنفيذ.
+تأكد من فشله للسبب المتوقع، ثم نفّذ السلوك وحسّن الكود مع نجاح الاختبارات.
+سجّل أدلة الفشل والنجاح، دون commit أو push.
+```
+
+For delegated work, request `tp-delegate` with TDD and the chosen worker tool/model. The coordinator assigns the TDD cycles to the implementation writer and preserves repair budgets; `tp-test` remains the final QA stage. TDD records observed evidence and does not guarantee complete coverage or authorize external actions.
 
 ### `tp-test`
 
@@ -149,7 +175,7 @@ python3 -B -m unittest discover -s tests -v
 
 ## Naming and migration
 
-The existing planning skills retain their `tp_` names. New skills `tp-delegate` and `tp-test` use hyphenated names for compatibility with skill validators; no existing skill is renamed. The testing skill discussed as `tp_test` is published as `tp-test`.
+The existing planning skills retain their `tp_` names. New skills `tp-delegate` and `tp-test` use hyphenated names for compatibility with skill validators; the test-first implementation skill is named `tdd`. No existing skill is renamed. The testing skill discussed as `tp_test` is published as `tp-test`.
 
 | Previous name | Current name |
 | --- | --- |

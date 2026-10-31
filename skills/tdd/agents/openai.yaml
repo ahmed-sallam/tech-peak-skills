@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tech Peak TDD"
+  short_description: "Build behavior through unit and integration tests"
+  default_prompt: "Use $tdd to implement this behavior through failing unit or integration tests, the smallest correct change, and refactoring. Record red/green evidence and run the relevant regression checks."

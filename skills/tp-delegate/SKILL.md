@@ -54,6 +54,15 @@ The worker chooses routine implementation details inside these boundaries.
   a failing regression test first unless waived. Worker tests cannot redefine scope.
 - Verify commands in repository scripts/configuration and record existing failures.
 
+When the user requests TDD, assign installed `tdd` to the implementation worker
+after planning. Include its skill path, behavior criteria, and required Red/Green
+evidence in the packet. Keep each test/implementation/refactor cycle with that
+writer; expected behavioral Red is not a repair failure, while actual repair
+attempts consume the existing task budget. Preserve tests-only requests as
+handoffs without production edits. Final independent QA remains a separate step;
+use installed `tp-test` when assigned. If `tdd` is unavailable, carry the same
+test-first requirements in the packet without claiming to have invoked it.
+
 ## 2. Package and dispatch
 
 Read [handoff format](references/handoff.md) for the packet and durable ledger.
